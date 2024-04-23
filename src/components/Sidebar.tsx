@@ -1,11 +1,8 @@
 
 import SidebarItems from './SidebarItems';
 
-import { getUserAuth } from '@/lib/auth/utils';
 
 const Sidebar = async () => {
-  const session = await getUserAuth();
-  if (session.session === null) return null;
 
   return (
     <aside className="hidden h-screen min-w-52 border-r border-border bg-muted p-4 pt-8 shadow-inner md:block">

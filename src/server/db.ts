@@ -1,16 +1,10 @@
-import { PrismaClient } from '@prisma/client';
+import { env } from '@/lib/env.mjs';
+import { createClient } from '@libsql/client';
+import { drizzle } from 'drizzle-orm/libsql';
 
-import { env } from '@/env';
+export const sqlite = createClient({
+  url: env.DATABASE_URL,
+  authToken: env.DATABASE_AUTH_TOKEN
+});
 
-const createPrismaClient = () =>
-  new PrismaClient({
-    log: env.NODE_ENV === 'development' ? ['query', 'error', 'warn'] : ['error']
-  });
-
-const globalForPrisma = globalThis as unknown as {
-  prisma: ReturnType<typeof createPrismaClient> | undefined;
-};
-
-export const db = globalForPrisma.prisma ?? createPrismaClient();
-
-if (env.NODE_ENV !== 'production') globalForPrisma.prisma = db;
+export const db = drizzle(sqlite);
